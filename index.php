@@ -23,14 +23,14 @@ $categorie = getFilieres();
                 <option value="">-- Choisissez une catégorie --</option>
                 <?php
                 foreach ($categorie as $cate):
-                    ?>
-                    <option value="<?= $cate['id'] ?>"><?= $cate['nom'] ?></option>
+                ?>
+                    <option value="<?= htmlspecialchars($cate['id']) ?>"><?= htmlspecialchars($cate['nom']) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
 
-
         <div class="mb-3">
+            <label for="filiere" class="form-label">Filière</label>
             <label for="filiere" class="form-label">Filière</label>
             <select class="form-select" id="filiere" name="filiere" disabled>
                 <option value="">-- Choisissez une filière --</option>
@@ -42,8 +42,28 @@ $categorie = getFilieres();
 
 </body>
 <script>
-    $(document).ready(()=>{
-        
+    $(document).ready(() => {
+        $('#categorie').change(() => {
+            let id = $('#categorie').val();
+            $.ajax({
+                method: 'POST',
+                url: 'getfil.php',
+                dataType: 'html',
+                data: {
+                    id: id
+                },
+                success: (response) => {
+                    $('#filiere').html('<option value="">-- Choisissez une filière --</option>' + response);
+                    $('#filiere').prop('disabled', false); 
+                },
+
+                error: (error) => {
+                    console.log("Erreur f l'AJAX:", error);
+                }
+            });
+
+        })
     })
 </script>
+
 </html>
